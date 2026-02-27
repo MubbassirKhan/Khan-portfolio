@@ -31,153 +31,398 @@
 
   <!-- custom animation styles -->
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-
-    /* limit animation container to hero section */
+    /* ═══════════════════════════════════════════
+       HERO / LANDING PAGE
+    ═══════════════════════════════════════════ */
     #hero {
-      height: 100vh;
+      min-height: 100vh;
+      min-height: 100svh;
       overflow: hidden;
-      background-color: #000;
+      background: #020c18;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
+      padding: 0;
     }
 
-    h1 {
-      color: green;
-      font-family: 'Share Tech Mono', 'Cascadia Code', Menlo, Monaco, 'Courier New', monospace;
-      font-size: 6rem;
-      filter: drop-shadow(0px 0px 5px currentColor);
-    }
-
-    h1::after {
-      content: '';
-      display: inline-block;
-      width: .2em;
-      height: .7em;
-      background-color: currentColor;
-      margin-left: .1em;
-      animation: blink 1s linear infinite forwards;
-      vertical-align: baseline;
-    }
-
-    .grid-container {
-      --grid: 10rem;
+    /* Particle canvas */
+    #heroCanvas {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
+      z-index: 0;
+    }
+
+    /* Ambient glow blobs */
+    .hero-blob {
       position: absolute;
-      top: 0;
-      left: 0;
-      transform-style: preserve-3d;
-      perspective: 100rem;
-      animation: rotate 100s linear infinite forwards;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-blob-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(20,157,221,.22) 0%, transparent 70%);
+      top: -100px; left: -100px;
+      animation: blobDrift 12s ease-in-out infinite alternate;
+    }
+    .hero-blob-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,255,100,.14) 0%, transparent 70%);
+      bottom: -60px; right: -60px;
+      animation: blobDrift 15s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes blobDrift {
+      0%   { transform: translate(0,0) scale(1); }
+      100% { transform: translate(60px,40px) scale(1.15); }
     }
 
-    .grid-container .plane {
-      --dir: 1;
-      width: 300%;
-      height: 150%;
-      min-height: 70rem;
-      position: absolute;
-      bottom: 0;
-      transform-style: preserve-3d;
-      transform-origin: bottom center;
-      transform: translateX(-50%) rotateX(85deg);
-    }
-
-    .grid-container .plane:last-child {
-      --dir: -1;
-      top: 0;
-      transform-origin: top center;
-      transform: translateX(-50%) rotateX(-85deg);
-    }
-
-    .grid-container .plane:last-child>*::after {
-      background-image: linear-gradient(to top, rgba(0, 0, 0, 255) var(--grid), rgba(0, 0, 0, 0));
-    }
-
-    .grid-container .plane>* {
-      transform-style: preserve-3d;
-      height: 100%;
-      width: 100%;
-      position: absolute;
-    }
-
-    .grid-container .plane>*::before,
-    .grid-container .plane>*::after {
-      content: '';
-      display: block;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-    }
-
-    .grid-container .plane>*::before {
-      /* brighter neon lines and a little thicker for better contrast */
-      background-image: repeating-linear-gradient(to left, #0f0, #0f0 6px, transparent 6px, transparent var(--grid)),
-        repeating-linear-gradient(to bottom, #0f0, #0f0 6px, transparent 6px, transparent var(--grid));
-      animation: move 1s linear infinite forwards;
-      /* add a slight glow around each line */
-      box-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
-    }
-
-    .grid-container .plane>*::after {
-      background-image: linear-gradient(to bottom, rgba(0, 0, 0, 255) var(--grid), rgba(0, 0, 0, 0));
-      z-index: 1;
-      transform: translateZ(1px);
-    }
-
-    .grid-container .glow {
-      filter: blur(1.5rem) brightness(1.5);
-      z-index: 1;
-      mix-blend-mode: plus-lighter;
-    }
-
-    @keyframes move {
-      from {
-        transform: translateY(0px);
-      }
-
-      to {
-        transform: translateY(calc(var(--grid) * var(--dir)));
-      }
-    }
-
-    @keyframes rotate {
-      from {
-        transform: rotateY(0deg);
-      }
-
-      to {
-        transform: rotateY(360deg);
-      }
-    }
-
-    @keyframes blink {
-      0% {
-        visibility: visible;
-      }
-
-      50% {
-        visibility: visible;
-      }
-
-      51% {
-        visibility: hidden;
-      }
-
-      100% {
-        visibility: hidden;
-      }
-    }
-
-    /* make hero text appear above the grid */
-    #hero .container {
+    /* ── Content wrapper ── */
+    .hero-content {
       position: relative;
       z-index: 2;
+      text-align: center;
+      padding: 80px 24px 100px;
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    /* Available badge */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(20,157,221,.12);
+      border: 1px solid rgba(20,157,221,.35);
+      color: #149ddd;
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: fadeSlideDown .8s ease both;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 8px; height: 8px;
+      background: #00e676;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(0,230,118,.5);
+      animation: pulse-dot 1.8s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%   { box-shadow: 0 0 0 0 rgba(0,230,118,.6); }
+      70%  { box-shadow: 0 0 0 8px rgba(0,230,118,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,230,118,0); }
+    }
+
+    /* Avatar */
+    .hero-avatar-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 28px;
+      animation: fadeSlideDown .8s .1s ease both;
+    }
+    .hero-avatar-wrap img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: top;
+      position: relative;
+      z-index: 2;
+      border: 3px solid rgba(20,157,221,.6);
+    }
+    /* Rotating ring */
+    .hero-avatar-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px dashed rgba(20,157,221,.5);
+      animation: spin 10s linear infinite;
+      z-index: 1;
+    }
+    .hero-avatar-ring::before {
+      content: '';
+      position: absolute;
+      width: 10px; height: 10px;
+      background: #149ddd;
+      border-radius: 50%;
+      top: -5px; left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 10px #149ddd;
+    }
+    /* Outer glow ring */
+    .hero-avatar-glow {
+      position: absolute;
+      inset: -16px;
+      border-radius: 50%;
+      background: conic-gradient(
+        rgba(20,157,221,.4), rgba(0,255,100,.2), rgba(20,157,221,.4), transparent
+      );
+      animation: spin 6s linear infinite reverse;
+      z-index: 0;
+      filter: blur(6px);
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Name */
+    .hero-name {
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      letter-spacing: -1px;
+      animation: fadeSlideUp .8s .2s ease both;
+    }
+    .hero-name span {
+      background: linear-gradient(90deg, #149ddd, #00e676);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Role / typed */
+    .hero-role {
+      font-size: clamp(1rem, 2.2vw, 1.3rem);
+      color: rgba(255,255,255,.7);
+      margin-bottom: 12px;
+      animation: fadeSlideUp .8s .35s ease both;
+    }
+    .hero-role .typed {
+      color: #149ddd;
+      font-weight: 600;
+    }
+
+    /* Bio line */
+    .hero-bio {
+      font-size: .95rem;
+      color: rgba(255,255,255,.45);
+      max-width: 460px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+      animation: fadeSlideUp .8s .45s ease both;
+    }
+
+    /* CTA Buttons */
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+      animation: fadeSlideUp .8s .55s ease both;
+    }
+    .btn-hero-primary {
+      background: linear-gradient(135deg, #149ddd, #0d7cb5);
+      color: #fff;
+      padding: 13px 34px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: .95rem;
+      text-decoration: none;
+      transition: transform .25s ease, box-shadow .25s ease;
+      box-shadow: 0 4px 20px rgba(20,157,221,.35);
+    }
+    .btn-hero-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(20,157,221,.55);
+      color: #fff;
+    }
+    .btn-hero-secondary {
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.85);
+      padding: 13px 34px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: .95rem;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(8px);
+      transition: all .25s ease;
+    }
+    .btn-hero-secondary:hover {
+      background: rgba(255,255,255,.12);
+      border-color: rgba(20,157,221,.5);
+      color: #fff;
+      transform: translateY(-3px);
+    }
+
+    /* Social Icons */
+    .hero-socials {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 44px;
+      animation: fadeSlideUp .8s .65s ease both;
+    }
+    .hero-socials a {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.15);
+      color: rgba(255,255,255,.7);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem;
+      text-decoration: none;
+      transition: all .25s ease;
+    }
+    .hero-socials a:hover {
+      background: #149ddd;
+      border-color: #149ddd;
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(20,157,221,.4);
+    }
+
+    /* Stats bar */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      animation: fadeSlideUp .8s .75s ease both;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      max-width: 420px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .hero-stat {
+      flex: 1;
+      padding: 18px 10px;
+      text-align: center;
+      position: relative;
+    }
+    .hero-stat + .hero-stat::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; height: 60%;
+      width: 1px;
+      background: rgba(255,255,255,.1);
+    }
+    .hero-stat span {
+      display: block;
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #149ddd;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .hero-stat small {
+      font-size: .72rem;
+      color: rgba(255,255,255,.45);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    /* Scroll indicator */
+    .hero-scroll {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      text-align: center;
+      animation: fadeSlideUp .8s 1s ease both;
+    }
+    .hero-scroll span {
+      display: block;
+      font-size: .7rem;
+      color: rgba(255,255,255,.35);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .hero-scroll i {
+      font-size: 1.2rem;
+      color: rgba(20,157,221,.7);
+      animation: bounce 1.8s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(7px); }
+    }
+
+    /* Entrance keyframes */
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════════════════════════════════════════
+       SECTION ANIMATIONS
+    ═══════════════════════════════════════════ */
+    .portfolio .portfolio-content {
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform .35s ease, box-shadow .35s ease;
+    }
+    .portfolio .portfolio-content:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 14px 32px rgba(0,0,0,.18);
+    }
+    .services .service-item {
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .services .service-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0,0,0,.12);
+    }
+    .skills .progress-bar {
+      transition: width 1.2s cubic-bezier(.25,.8,.25,1) !important;
+    }
+    .resume .resume-item {
+      transition: transform .3s ease;
+    }
+    .resume .resume-item:hover {
+      transform: translateX(6px);
+    }
+    .contact .info-item {
+      transition: transform .3s ease;
+    }
+    .contact .info-item:hover {
+      transform: translateX(6px);
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      .hero-avatar-wrap img { width: 120px; height: 120px; }
+      .hero-stats { max-width: 320px; }
+      .hero-stat span { font-size: 1.3rem; }
+    }
+    @media (max-width: 480px) {
+      .hero-cta { flex-direction: column; align-items: center; }
+      .btn-hero-primary, .btn-hero-secondary { width: 200px; text-align: center; }
+    }
+
+    /* ── Specificity overrides vs main.css .hero h2 / .hero p ── */
+    #hero h2.hero-name {
+      font-size: clamp(2rem, 5vw, 3.6rem) !important;
+      margin: 0 0 14px !important;
+    }
+    #hero p.hero-role {
+      font-size: clamp(1rem, 2.2vw, 1.3rem) !important;
+      margin: 0 0 12px !important;
+    }
+    #hero p.hero-bio {
+      font-size: .95rem !important;
     }
   </style>
 
@@ -218,7 +463,6 @@
         <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
         <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
         <li><a href="#services"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
-        </li>
         <li><a href="#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
       </ul>
     </nav>
@@ -230,24 +474,55 @@
     <!-- Hero Section -->
     <section id="hero" class="hero section dark-background">
 
-      <!-- animated matrix grid replacing hero image -->
-      <div class="grid-container">
-        <div class="plane">
-          <div class="grid"></div>
-          <div class="glow"></div>
+      <!-- Particle canvas -->
+      <canvas id="heroCanvas"></canvas>
+
+      <!-- Ambient blobs -->
+      <div class="hero-blob hero-blob-1"></div>
+      <div class="hero-blob hero-blob-2"></div>
+
+      <!-- Main content -->
+      <div class="hero-content">
+
+        <!-- Available badge -->
+
+        <!-- Avatar -->
+        <div class="hero-avatar-wrap">
+          <div class="hero-avatar-glow"></div>
+          <div class="hero-avatar-ring"></div>
+          <img src="assets/img/Khan Profile.JPG" alt="Mubbassir Khan Jahagirdar">
         </div>
-        <div class="plane">
-          <div class="grid"></div>
-          <div class="glow"></div>
+
+        <!-- Name -->
+        <h2 class="hero-name">Mubbassir Khan <span>Jahagirdar</span></h2>
+
+        <!-- Role -->
+        <p class="hero-role">I'm a
+          <span class="typed" data-typed-items="Full Stack Web Developer,Backend Developer,Machine Learning Enthusiast">Full Stack Web Developer</span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span>
+        </p>
+
+        <!-- Bio -->
+        <p class="hero-bio">MCA graduate crafting scalable web applications &amp; intelligent ML solutions from Dharwad, India.</p>
+
+        <!-- CTA Buttons -->
+        <div class="hero-cta">
+          <a href="#portfolio" class="btn-hero-primary"><i class="bi bi-grid me-2"></i>View My Work</a>
+          <a href="#contact" class="btn-hero-secondary"><i class="bi bi-send me-2"></i>Contact Me</a>
         </div>
+
+        <!-- Stats -->
+        <div class="hero-stats">
+          <div class="hero-stat"><span>6+</span><small>Projects</small></div>
+          <div class="hero-stat"><span>2</span><small>Internships</small></div>
+          <div class="hero-stat"><span>10+</span><small>Technologies</small></div>
+        </div>
+
       </div>
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <h2>Mubbassir Khan Jahagirdar</h2>
-        <p>I'm <span class="typed"
-            data-typed-items="Full Stack Web Developer, Back End Developer, Machine Learning Enthusiast">Full Stack Web
-            Developer</span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span><span
-            class="typed-cursor typed-cursor--blink" aria-hidden="true"></span></p>
+      <!-- Scroll indicator -->
+      <div class="hero-scroll">
+        <span>Scroll</span>
+        <i class="bi bi-chevron-double-down"></i>
       </div>
 
     </section><!-- /Hero Section -->
@@ -257,54 +532,45 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>About</h2>
-        <p>Motivated MCA graduate with a strong interest in full stack web development and machine learning. Experienced
-          in building real‑world applications and data‑driven projects. Eager to leverage technology for business
-          strategy and decision‑making.</p>
+        <h2>About Me</h2>
+        <p>A little more about who I am and what I do.</p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <div class="row gy-4 justify-content-center">
-          <div class="col-lg-4">
-            <img src="assets/img/Khan Profile.JPG" class="img-fluid" alt="Profile Image">
-          </div>
-          <div class="col-lg-8 content">
-            <h2>Full Stack Web Developer &amp; Machine Learning Enthusiast</h2>
-            <p class="fst-italic py-3">
-              I am a passionate full stack web developer with a strong interest in machine learning. I have experience
-              building real-world applications and data-driven projects. I am eager to leverage technology to drive
-              business strategy and decision-making.
-            </p>
-            <div class="row">
-              <div class="col-lg-6">
-                <ul>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+91 7619175596</span></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span>mubbassirkhan96@gmail.com</span>
-                  </li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>City:</strong> <span>Dharwad, Karnataka, India</span>
-                  </li>
-                </ul>
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+
+            <div class="about-info-card p-4 rounded-4" style="background:var(--surface-color);box-shadow:0 4px 24px rgba(0,0,0,.08);">
+
+              <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:6px;">Full Stack Developer &amp; ML Enthusiast</h3>
+              <p class="fst-italic text-muted mb-4" style="font-size:.95rem;">
+                I build scalable web applications and data-driven ML solutions — passionate about clean code, strong architecture, and turning ideas into reality.
+              </p>
+
+              <div class="row gy-2 mb-4">
+                <div class="col-md-6">
+                  <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><i class="bi bi-chevron-right text-primary me-2"></i><strong>Phone:</strong>&nbsp;<span>+91 7619175596</span></li>
+                    <li class="mb-2"><i class="bi bi-chevron-right text-primary me-2"></i><strong>Email:</strong>&nbsp;<span>mubbassirkhan96@gmail.com</span></li>
+                    <li class="mb-2"><i class="bi bi-chevron-right text-primary me-2"></i><strong>City:</strong>&nbsp;<span>Dharwad, Karnataka, India</span></li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><i class="bi bi-chevron-right text-primary me-2"></i><strong>Degree:</strong>&nbsp;<span>MCA — KLE Institute of Technology</span></li>
+                    <li class="mb-2"><i class="bi bi-chevron-right text-primary me-2"></i><strong>Freelance:</strong>&nbsp;<span class="text-success fw-semibold">Available</span></li>
+                  </ul>
+                </div>
               </div>
-              <div class="col-lg-6">
-                <ul>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Master of Computer Application
-                      (MCA)</span></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Freelance:</strong> <span>Available</span></li>
-                </ul>
-              </div>
+
+              <p class="mb-0" style="font-size:.95rem;line-height:1.7;">
+                Proficient in Python, Java, and JavaScript with hands-on experience in FastAPI, Flask, React.js, and Node.js.
+                Skilled in MySQL, PostgreSQL, and MongoDB. Experienced in machine learning, data analysis, and model deployment.
+              </p>
+
             </div>
-            <p class="py-3">
-              I am a motivated MCA graduate with a strong interest in full stack web development and machine learning.
-              I have experience building real-world applications and data-driven projects. I am eager to leverage
-              technology to drive business strategy and decision-making.
-            </p>
-            <p style="margin-top: -1pc;">
-              I have strong skills in Python, Java, and JavaScript, with experience in FastAPI, Flask, React.js, and
-              databases like MySQL, PostgreSQL, and MongoDB. I enjoy building scalable web applications and have
-              hands-on experience in machine learning, data analysis, and model deployment. I am eager to keep learning
-              and contribute to innovative projects.
-            </p>
+
           </div>
         </div>
 
@@ -446,8 +712,8 @@
 
         <div class="row">
 
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-            <h3 class="resume-title">Sumary</h3>
+          <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
+            <h3 class="resume-title">Summary</h3>
 
             <div class="resume-item pb-0">
               <h4>Mubbassir Khan Jahagirdar</h4>
@@ -475,7 +741,7 @@
 
           </div>
 
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
             <h3 class="resume-title">Professional Experience</h3>
             <div class="resume-item">
               <h4>Backend Developer & Machine Learning Intern</h4>
@@ -796,6 +1062,89 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Hero Particle Network -->
+  <script>
+  (function () {
+    const canvas = document.getElementById('heroCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+    const COUNT = 80, MAX_DIST = 120;
+
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function Particle() {
+      this.reset();
+    }
+    Particle.prototype.reset = function () {
+      this.x  = Math.random() * W;
+      this.y  = Math.random() * H;
+      this.r  = Math.random() * 1.8 + .6;
+      this.vx = (Math.random() - .5) * .5;
+      this.vy = (Math.random() - .5) * .5;
+      this.a  = Math.random() * .6 + .2;
+    };
+    Particle.prototype.update = function () {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0 || this.x > W) this.vx *= -1;
+      if (this.y < 0 || this.y > H) this.vy *= -1;
+    };
+
+    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+    // Mouse repulsion
+    let mouse = { x: -999, y: -999 };
+    canvas.addEventListener('mousemove', e => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+    });
+    canvas.addEventListener('mouseleave', () => { mouse.x = -999; mouse.y = -999; });
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      // Draw connections
+      for (let i = 0; i < COUNT; i++) {
+        for (let j = i + 1; j < COUNT; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < MAX_DIST) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(20,157,221,${.35 * (1 - d / MAX_DIST)})`;
+            ctx.lineWidth = .7;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      // Draw dots + mouse repulsion
+      particles.forEach(p => {
+        const mdx = p.x - mouse.x, mdy = p.y - mouse.y;
+        const md  = Math.sqrt(mdx * mdx + mdy * mdy);
+        if (md < 100) {
+          p.x += mdx / md * 1.5;
+          p.y += mdy / md * 1.5;
+        }
+        p.update();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(20,157,221,${p.a})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+  </script>
 
 </body>
 
